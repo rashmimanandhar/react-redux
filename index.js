@@ -26,13 +26,17 @@ function createStore(reducer) {
 }
 
 //App code
+
+const ADD_TODO = "ADD_TODO";
+const REMOVE_TODO = "REMOVE_TODO";
+const TOGGLE_TODO = "TOGGLE_TODO";
 function todos(state = [], action) {
   switch (action.type) {
-    case "ADD_TODO":
+    case ADD_TODO:
       return state.concat([action.todo]);
-    case "REMOVE_TODO":
+    case REMOVE_TODO:
       return state.filter(todo => todo.id !== action.id);
-    case "TOGGLE_TODO":
+    case TOGGLE_TODO:
       return state.map(todo => {
         todo.complete = todo.id === action.id ? !todo.complete : todo.complete;
         return todo;
@@ -42,11 +46,13 @@ function todos(state = [], action) {
   }
 }
 
+const ADD_GOAL = "ADD_GOAL";
+const REMOVE_GOAL = "REMOVE_GOAL";
 function goals(state = [], action) {
   switch (action.type) {
-    case "ADD_GOAL":
+    case ADD_GOAL:
       return state.concat([action.goal]);
-    case "REMOVE_GOAL":
+    case REMOVE_GOAL:
       return state.filter(goal => goal.id !== action.id);
 
     default:
@@ -68,7 +74,7 @@ store.subscribe(() => {
 });
 
 store.dispatch({
-  type: "ADD_TODO",
+  type: ADD_TODO,
   todo: {
     id: 0,
     name: "bring book",
@@ -77,7 +83,7 @@ store.dispatch({
 });
 
 store.dispatch({
-  type: "ADD_TODO",
+  type: ADD_TODO,
   todo: {
     id: 1,
     name: "read book",
@@ -86,7 +92,7 @@ store.dispatch({
 });
 
 store.dispatch({
-  type: "ADD_TODO",
+  type: ADD_TODO,
   todo: {
     id: 2,
     name: "send book",
@@ -95,17 +101,17 @@ store.dispatch({
 });
 
 store.dispatch({
-  type: "REMOVE_TODO",
+  type: REMOVE_TODO,
   id: 2
 });
 
 store.dispatch({
-  type: "TOGGLE_TODO",
+  type: TOGGLE_TODO,
   id: 1
 });
 
 store.dispatch({
-  type: "ADD_GOAL",
+  type: ADD_GOAL,
   todo: {
     id: 0,
     name: "do crunches",
@@ -114,7 +120,7 @@ store.dispatch({
 });
 
 store.dispatch({
-  type: "ADD_GOAL",
+  type: ADD_GOAL,
   todo: {
     id: 1,
     name: "run for 15 mins",
@@ -123,7 +129,7 @@ store.dispatch({
 });
 
 store.dispatch({
-  type: "ADD_GOAL",
+  type: ADD_GOAL,
   todo: {
     id: 2,
     name: "do bench press",
@@ -132,6 +138,6 @@ store.dispatch({
 });
 
 store.dispatch({
-  type: "REMOVE_GOAL",
+  type: REMOVE_GOAL,
   id: 2
 });
