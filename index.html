@@ -135,7 +135,19 @@
       const store = createStore(app);
 
       store.subscribe(() => {
-        console.log("new state", store.getState());
+        const { todos, goals } = store.getState();
+        console.log(todos);
+
+        document.getElementById("goals").innerHTML = "";
+        document.getElementById("todos").innerHTML = "";
+
+        goals.forEach((goal, i) => {
+          addGoalToDOM(goal);
+        });
+
+        todos.forEach((todo, i) => {
+          addTodoToDOM(todo);
+        });
       });
 
       function addTodo() {
@@ -151,6 +163,10 @@
         );
       }
 
+      function toggleTodo(id) {
+        store.dispatch(toggleTodoAction(id));
+      }
+
       function addGoal() {
         const input = document.getElementById("goal");
         const name = input.value;
@@ -163,9 +179,32 @@
         );
       }
 
+      function addTodoToDOM(todo) {
+        const node = document.createElement("li");
+        const text = document.createTextNode(todo.name);
+        node.setAttribute("onClick", "toggleTodo('" + todo.id + "')");
+        node.setAttribute("id", todo.id);
+        if (todo.complete) {
+          node.style.setProperty("text-decoration", "line-through");
+        }
+
+        node.appendChild(text);
+
+        document.getElementById("todos").appendChild(node);
+      }
+
+      function addGoalToDOM(goal) {
+        const node = document.createElement("li");
+        const text = document.createTextNode(goal.name);
+        node.appendChild(text);
+
+        document.getElementById("goals").appendChild(node);
+      }
+
       document.getElementById("todoBtn").addEventListener("click", addTodo);
 
       document.getElementById("goalBtn").addEventListener("click", addGoal);
+
       // store.dispatch(
       //   addTodoAction({
       //     id: 0,
