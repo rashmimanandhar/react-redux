@@ -30,6 +30,44 @@ function createStore(reducer) {
 const ADD_TODO = "ADD_TODO";
 const REMOVE_TODO = "REMOVE_TODO";
 const TOGGLE_TODO = "TOGGLE_TODO";
+const ADD_GOAL = "ADD_GOAL";
+const REMOVE_GOAL = "REMOVE_GOAL";
+
+function addTodoAction(todo) {
+  return {
+    type: ADD_TODO,
+    todo
+  };
+}
+
+function removeTodoAction(id) {
+  return {
+    type: REMOVE_TODO,
+    id
+  };
+}
+
+function toggleTodoAction(id) {
+  return {
+    type: TOGGLE_TODO,
+    id
+  };
+}
+
+function addGoalAction(goal) {
+  return {
+    type: ADD_GOAL,
+    goal
+  };
+}
+
+function removeGoalAction(id) {
+  return {
+    type: REMOVE_GOAL,
+    id
+  };
+}
+
 function todos(state = [], action) {
   switch (action.type) {
     case ADD_TODO:
@@ -46,8 +84,6 @@ function todos(state = [], action) {
   }
 }
 
-const ADD_GOAL = "ADD_GOAL";
-const REMOVE_GOAL = "REMOVE_GOAL";
 function goals(state = [], action) {
   switch (action.type) {
     case ADD_GOAL:
@@ -73,71 +109,56 @@ store.subscribe(() => {
   console.log("new state", store.getState());
 });
 
-store.dispatch({
-  type: ADD_TODO,
-  todo: {
+store.dispatch(
+  addTodoAction({
     id: 0,
     name: "bring book",
     complete: false
-  }
-});
+  })
+);
 
-store.dispatch({
-  type: ADD_TODO,
-  todo: {
+store.dispatch(
+  addTodoAction({
     id: 1,
     name: "read book",
     complete: false
-  }
-});
+  })
+);
 
-store.dispatch({
-  type: ADD_TODO,
-  todo: {
+store.dispatch(
+  addTodoAction({
     id: 2,
-    name: "send book",
-    complete: true
-  }
-});
+    name: "return book",
+    complete: false
+  })
+);
 
-store.dispatch({
-  type: REMOVE_TODO,
-  id: 2
-});
+store.dispatch(removeTodoAction(2));
 
-store.dispatch({
-  type: TOGGLE_TODO,
-  id: 1
-});
+store.dispatch(toggleTodoAction(1));
 
-store.dispatch({
-  type: ADD_GOAL,
-  todo: {
+store.dispatch(
+  addGoalAction({
     id: 0,
     name: "do crunches",
     complete: false
-  }
-});
+  })
+);
 
-store.dispatch({
-  type: ADD_GOAL,
-  todo: {
+store.dispatch(
+  addGoalAction({
     id: 1,
     name: "run for 15 mins",
     complete: false
-  }
-});
+  })
+);
 
-store.dispatch({
-  type: ADD_GOAL,
-  todo: {
+store.dispatch(
+  addGoalAction({
     id: 2,
     name: "do bench press",
     complete: true
-  }
-});
+  })
+);
 
-store.dispatch({
-  type: REMOVE_GOAL,
-  id: 2
-});
+store.dispatch(removeGoalAction(2));
