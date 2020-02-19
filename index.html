@@ -19,6 +19,13 @@
       <ul id="goals"></ul>
     </div>
     <script type="text/javascript">
+      function generateId() {
+        return (
+          Math.random()
+            .toString(36)
+            .substring(2) + new Date().getTime().toString(36)
+        );
+      }
       //Library
       function createStore(reducer) {
         let state;
@@ -131,59 +138,87 @@
         console.log("new state", store.getState());
       });
 
-      store.dispatch(
-        addTodoAction({
-          id: 0,
-          name: "bring book",
-          complete: false
-        })
-      );
+      function addTodo() {
+        const input = document.getElementById("todo");
+        const name = input.value;
+        input.value = "";
+        store.dispatch(
+          addTodoAction({
+            name,
+            complete: false,
+            id: generateId()
+          })
+        );
+      }
 
-      store.dispatch(
-        addTodoAction({
-          id: 1,
-          name: "read book",
-          complete: false
-        })
-      );
+      function addGoal() {
+        const input = document.getElementById("goal");
+        const name = input.value;
+        input.value = "";
+        store.dispatch(
+          addGoalAction({
+            name,
+            id: generateId()
+          })
+        );
+      }
 
-      store.dispatch(
-        addTodoAction({
-          id: 2,
-          name: "return book",
-          complete: false
-        })
-      );
+      document.getElementById("todoBtn").addEventListener("click", addTodo);
 
-      store.dispatch(removeTodoAction(2));
-
-      store.dispatch(toggleTodoAction(1));
-
-      store.dispatch(
-        addGoalAction({
-          id: 0,
-          name: "do crunches",
-          complete: false
-        })
-      );
-
-      store.dispatch(
-        addGoalAction({
-          id: 1,
-          name: "run for 15 mins",
-          complete: false
-        })
-      );
-
-      store.dispatch(
-        addGoalAction({
-          id: 2,
-          name: "do bench press",
-          complete: true
-        })
-      );
-
-      store.dispatch(removeGoalAction(2));
+      document.getElementById("goalBtn").addEventListener("click", addGoal);
+      // store.dispatch(
+      //   addTodoAction({
+      //     id: 0,
+      //     name: "bring book",
+      //     complete: false
+      //   })
+      // );
+      //
+      // store.dispatch(
+      //   addTodoAction({
+      //     id: 1,
+      //     name: "read book",
+      //     complete: false
+      //   })
+      // );
+      //
+      // store.dispatch(
+      //   addTodoAction({
+      //     id: 2,
+      //     name: "return book",
+      //     complete: false
+      //   })
+      // );
+      //
+      // store.dispatch(removeTodoAction(2));
+      //
+      // store.dispatch(toggleTodoAction(1));
+      //
+      // store.dispatch(
+      //   addGoalAction({
+      //     id: 0,
+      //     name: "do crunches",
+      //     complete: false
+      //   })
+      // );
+      //
+      // store.dispatch(
+      //   addGoalAction({
+      //     id: 1,
+      //     name: "run for 15 mins",
+      //     complete: false
+      //   })
+      // );
+      //
+      // store.dispatch(
+      //   addGoalAction({
+      //     id: 2,
+      //     name: "do bench press",
+      //     complete: true
+      //   })
+      // );
+      //
+      // store.dispatch(removeGoalAction(2));
     </script>
   </body>
 </html>
