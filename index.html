@@ -100,7 +100,7 @@
         }
       }
 
-      function checkAndDispatch(store, action) {
+      const checker = store => next => action => {
         if (
           action.type === ADD_TODO &&
           action.todo.name.toLowerCase().includes("bitcoin")
@@ -115,14 +115,15 @@
           return alert("Nope. Bad idea");
         }
 
-        store.dispatch(action);
-      }
+        next(action);
+      };
 
       const store = Redux.createStore(
         Redux.combineReducers({
           todos,
           goals
-        })
+        }),
+        Redux.applyMiddleware(checker)
       );
 
       store.subscribe(() => {
@@ -145,8 +146,7 @@
         const input = document.getElementById("todo");
         const name = input.value;
         input.value = "";
-        checkAndDispatch(
-          store,
+        store.dispatch(
           addTodoAction({
             name,
             complete: false,
@@ -156,15 +156,14 @@
       }
 
       function toggleTodo(id) {
-        checkAndDispatch(store, toggleTodoAction(id));
+        store.dispatch(toggleTodoAction(id));
       }
 
       function addGoal() {
         const input = document.getElementById("goal");
         const name = input.value;
         input.value = "";
-        checkAndDispatch(
-          store,
+        store.dispatch(
           addGoalAction({
             name,
             id: generateId()
@@ -188,7 +187,7 @@
         const text = document.createTextNode(todo.name);
 
         const removeBtn = createRemoveButton(() => {
-          checkAndDispatch(store, removeTodoAction(todo.id));
+          store.dispatch(removeTodoAction(todo.id));
         });
         node.setAttribute("onClick", "toggleTodo('" + todo.id + "')");
         node.setAttribute("id", todo.id);
@@ -206,7 +205,7 @@
         const node = document.createElement("li");
         const text = document.createTextNode(goal.name);
         const removeBtn = createRemoveButton(() => {
-          checkAndDispatch(store, removeGoalAction(goal.id));
+          store.dispatch(removeGoalAction(goal.id));
         });
         node.appendChild(text);
         node.appendChild(removeBtn);
