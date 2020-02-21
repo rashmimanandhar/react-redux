@@ -118,6 +118,17 @@
         next(action);
       };
 
+      const newGoalAdded = store => next => action => {
+        next(action);
+        if (action.type === ADD_GOAL) alert("That's a great goal");
+      };
+
+      const newTodoAdded = store => next => action => {
+        next(action);
+        if (action.type === ADD_TODO)
+          alert("Don't forget to " + action.todo.name);
+      };
+
       const logger = store => next => action => {
         console.group(action.type);
         console.log("The action: ", action);
@@ -132,12 +143,11 @@
           todos,
           goals
         }),
-        Redux.applyMiddleware(checker, logger)
+        Redux.applyMiddleware(checker, logger, newGoalAdded, newTodoAdded)
       );
 
       store.subscribe(() => {
         const { todos, goals } = store.getState();
-        console.log(todos);
 
         document.getElementById("goals").innerHTML = "";
         document.getElementById("todos").innerHTML = "";
