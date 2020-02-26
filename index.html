@@ -235,6 +235,7 @@
         )
       );
     </script>
+
     <script type="text/babel">
       function List(props) {
         return (
@@ -256,126 +257,146 @@
         );
       }
 
-      class ConnectedTodos extends React.Component {
-        render() {
-          return (
-            <Context.Consumer>
-              {store => {
-                const { todos } = store.getState();
-                return <Todos todos={todos} dispatch={store.dispatch} />;
-              }}
-            </Context.Consumer>
-          );
-        }
-      }
+      const ConnectedTodos = connect(state => ({
+        todos: state.todos
+      }))(Todos);
+
       class Todos extends React.Component {
         addItem = e => {
           e.preventDefault();
+
           this.props.dispatch(
             handleAddTodo(this.input.value, () => (this.input.value = ""))
           );
         };
 
-        toggleItem = id => {
-          this.props.dispatch(handleToggleTodo(id));
+        removeItem = item => {
+          this.props.dispatch(handleDeleteTodo(item));
         };
 
-        removeItem = todo => {
-          this.props.dispatch(handleDeleteTodo(todo));
+        toggleItem = item => {
+          this.props.dispatch(handleToggleTodo(item));
         };
+
         render() {
           return (
             <div>
-              <h1>Todo List </h1>
+              <h1>Todos</h1>
               <input
                 type="text"
-                placeholder="Add Todo"
-                ref={input => (this.input = input)}
+                placeholder="Add a todo item"
+                ref={input => {
+                  this.input = input;
+                }}
               />
-              <button onClick={this.addItem}>Add Todo </button>
+              <button onClick={this.addItem}>Add Todo</button>
               <List
-                toggle={this.toggleItem}
                 items={this.props.todos}
-                remove={this.removeItem}
+                removeItem={this.removeItem}
+                toggle={this.toggleItem}
               />
             </div>
           );
         }
       }
-
-      class ConnectedGoals extends React.Component {
-        render() {
-          return (
-            <Context.Consumer>
-              {store => {
-                const { goals } = store.getState();
-                return <Goals goals={goals} dispatch={store.dispatch} />;
-              }}
-            </Context.Consumer>
-          );
-        }
-      }
+      const ConnectedGoals = connect(state => ({
+        goals: state.goals
+      }))(Goals);
 
       class Goals extends React.Component {
         addItem = e => {
           e.preventDefault();
+
           this.props.dispatch(
             handleAddGoal(this.input.value, () => (this.input.value = ""))
           );
         };
 
-        removeItem = goal => {
-          this.props.dispatch(handleDeleteGoal(goal));
+        removeItem = item => {
+          this.props.dispatch(handleDeleteGoal(item));
+        };
+
+        toggleItem = item => {
+          this.props.dispatch(toggleGoalAction(item.id));
         };
 
         render() {
           return (
             <div>
-              <h1>Goal List </h1>
+              <h1>Goals</h1>
               <input
                 type="text"
-                placeholder="Add Goal"
-                ref={input => (this.input = input)}
+                placeholder="Add a goal item"
+                ref={input => {
+                  this.input = input;
+                }}
               />
               <button onClick={this.addItem}>Add Goal</button>
-              <List items={this.props.goals} remove={this.removeItem} />
+              <List items={this.props.goals} removeItem={this.removeItem} />
             </div>
           );
         }
       }
 
-      class ConnectedApp extends React.Component {
-        render() {
-          return (
-            <Context.Consumer>
-              {store => <App store={store} />}
-            </Context.Consumer>
-          );
-        }
-      }
+      const ConnectedApp = connect(state => ({
+        loading: state.loading
+      }))(App);
 
       class App extends React.Component {
-        componentDidMount() {
-          const { store } = this.props;
+        componentDidMount = () => {
+          const { dispatch } = this.props;
+          dispatch(handleInitialData());
+        };
 
-          store.dispatch(handleInitialData());
-
-          store.subscribe(() => this.forceUpdate());
-        }
         render() {
-          const { store } = this.props;
-          const { loading } = store.getState();
-          if (loading) {
-            return <h3> Loading </h3>;
+          if (this.props.loading) {
+            return <h3>Loading . . .</h3>;
           }
           return (
             <div>
-              <ConnectedGoals />
               <ConnectedTodos />
+              <ConnectedGoals />
             </div>
           );
         }
       }
+
+      function connect(mapStateToProps) {
+        return Component => {
+          class Receiver extends React.Component {
+            componentDidMount() {
+              const { subscribe } = this.props.store;
+              this.unsubscribe = subscribe(() => {
+                this.forceUpdate();
+              });
+            }
+
+            componentWillUnmount() {
+              this.unsubscribe;
+            }
+
+            render() {
+              const { dispatch, getState } = this.props.store;
+              const state = getState();
+              const stateNeeded = mapStateToProps(state);
+              return <Component {...stateNeeded} dispatch={dispatch} />;
+            }
+          }
+
+          class ConnectedComponent extends React.Component {
+            render() {
+              return (
+                <Context.Consumer>
+                  {store => <Receiver store={store} />}
+                </Context.Consumer>
+              );
+            }
+          }
+
+          return ConnectedComponent;
+        };
+      }
+
       const Context = React.createContext();
 
       class Provider extends React.Component {
