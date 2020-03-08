@@ -1,4 +1,4 @@
-import ADD_TODO from "../actions/todos";
+import { ADD_TODO } from "../actions/todos";
 
 const newTodoAdded = store => next => action => {
   next(action);

@@ -39,7 +39,7 @@ class Todos extends React.Component {
         <button onClick={this.addItem}>Add Todo</button>
         <List
           items={this.props.todos}
-          removeItem={this.removeItem}
+          remove={this.removeItem}
           toggle={this.toggleItem}
         />
       </div>

@@ -1,4 +1,4 @@
-import ADD_GOAL from "../actions/goals";
+import { ADD_GOAL } from "../actions/goals";
 
 const newGoalAdded = store => next => action => {
   next(action);

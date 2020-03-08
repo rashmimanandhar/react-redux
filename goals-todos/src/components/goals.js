@@ -29,7 +29,7 @@ class Goals extends React.Component {
           }}
         />
         <button onClick={this.addItem}>Add Goal</button>
-        <List items={this.props.goals} removeItem={this.removeItem} />
+        <List items={this.props.goals} remove={this.removeItem} />
       </div>
     );
   }

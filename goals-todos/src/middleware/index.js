@@ -1,7 +1,7 @@
 import checker from "./checker";
 import logger from "./logger";
-import addNewGoal from "./addNewGoal";
-import addNewTodo from "./addNewTodo";
+import newGoalAdded from "./addNewGoal";
+import newTodoAdded from "./addNewTodo";
 import thunk from "redux-thunk";
 import { applyMiddleware } from "redux";
 
