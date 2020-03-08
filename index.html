@@ -243,23 +243,19 @@
             {props.items.map(item => (
               <li key={item.id}>
                 <span
-                  onClick={() => props.toggle && props.toggle(item.id)}
+                  onClick={() => props.toggle && props.toggle(item)}
                   style={{
                     textDecoration: item.complete ? "line-through" : "none"
                   }}
                 >
                   {item.name}
                 </span>
-                <button onClick={() => props.remove(item)}>X</button>
+                <button onClick={() => props.removeItem(item)}>X</button>
               </li>
             ))}
           </ul>
         );
       }
-
-      const ConnectedTodos = connect(state => ({
-        todos: state.todos
-      }))(Todos);
 
       class Todos extends React.Component {
         addItem = e => {
@@ -299,9 +295,10 @@
           );
         }
       }
-      const ConnectedGoals = connect(state => ({
-        goals: state.goals
-      }))(Goals);
+
+      const ConnectedTodos = connect(state => ({
+        todos: state.todos
+      }))(Todos);
 
       class Goals extends React.Component {
         addItem = e => {
@@ -338,9 +335,9 @@
         }
       }
 
-      const ConnectedApp = connect(state => ({
-        loading: state.loading
-      }))(App);
+      const ConnectedGoals = connect(state => ({
+        goals: state.goals
+      }))(Goals);
 
       class App extends React.Component {
         componentDidMount = () => {
@@ -360,6 +357,10 @@
           );
         }
       }
+
+      const ConnectedApp = connect(state => ({
+        loading: state.loading
+      }))(App);
 
       function connect(mapStateToProps) {
         return Component => {
